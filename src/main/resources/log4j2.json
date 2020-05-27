@@ -1,0 +1,73 @@
+{
+  "configuration": {
+    "name": "Default",
+    "properties": {
+      "property": [
+        {
+          "name": "log-path",
+          "value": "logs"
+        },
+        {
+          "name": "archive",
+          "value": "${log-path}/archive"
+        }
+      ]
+    },
+    "appenders": {
+      "Console": {
+        "name": "Console-Appender",
+        "target": "SYSTEM_OUT",
+        "PatternLayout": {
+          "pattern": "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"
+        }
+      },
+      "SMTP": {
+		"name":"Mail-Appender",
+		"subject":"Core Application",
+		"to":"aman.tyagi@netapp.com",
+		"from":"noreply@netapp.com",
+		"smtpHost":"mail.netapp.com",
+		"bufferSize":"1",
+		"PatternLayout": {
+          "pattern": "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"
+        }
+	  },
+      "RollingFile": {
+        "name": "RollingFile-Appender",
+        "fileName": "${log-path}/log4jAppLog.log",
+        "filePattern": "${archive}/rollingfile.log.%d{yyyy-MM-dd-hh-mm}.gz",
+        "PatternLayout": {
+          "pattern": "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"
+        },
+        "Policies": {
+          "SizeBasedTriggeringPolicy": {
+            "size": "10 MB"
+          }
+        },
+        "DefaultRolloverStrategy": {
+          "max": "30"
+        }
+      }
+    },
+    "loggers": {
+      "logger": {
+        "name": "com.core",
+        "level": "debug",
+        "additivity": "false",
+        "appender-ref": [{
+          "ref": "Console-Appender", "level":"debug"
+        },
+        {
+          "ref": "RollingFile-Appender", "level":"debug"
+        },
+        {
+          "ref": "Mail-Appender", "level":"error"
+        }]
+      },
+      "root": {
+        "level": "info",
+        "appender-ref": {"ref": "Console-Appender"}
+      }
+    }
+  }
+}
