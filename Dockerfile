@@ -6,9 +6,5 @@ RUN mvn -f /home/app/pom.xml clean package
 FROM openjdk:8-jdk-alpine
 VOLUME /tmp
 EXPOSE 8000
-# The application's jar file
-ARG JAR_FILE
-
-# Add the application's jar to the container
-ADD ${JAR_FILE} app.jar
+COPY --from=build /home/app/target/*.jar app.jar
 ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar /app.jar" ]
